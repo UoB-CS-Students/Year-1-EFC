@@ -38,28 +38,7 @@ val f : 'a -> 'a
 **Can we define a function `f` whose type is `'a -> 'a -> 'a`?**
 As stated in the introduction, there are two ways of looking at this:
 
-1. `f` takes two inputs of type `'a`, and then returns something of type `'a`. So the general form of `f` will be `let f x y = ...`. How do we return something of type `'a`? Well, we know that both `x` and `y` have type `'a`, so let's just return either of those!
-
-  ```ocaml
-  let f x y = x;;
-  val f : 'a -> 'a -> 'a
-
-  let f x y = y;;
-  val f : 'a -> 'a -> 'a
-  ```
-
-1. `f` takes one argument and returns a function as an output. In this case, `f` will look like this: `let f x = ...`. In `...` we have to return a function with the type `'a -> 'a`. Well, we know from example 1 that we can define a function with the type `'a -> 'a` by writing `let g y = y`. So let's try defining `g` inside `f` and then return `g`!
-
-  ```ocaml
-  let f x =
-    let g y = y in
-    g;;
-  val f : 'a -> 'b -> 'b
-  ```
-
-  But wait, why does does `f` now have the type `'a -> 'b -> 'b`? Shouldn't it be `'a -> 'a -> 'a`? Here's the thing: there's nothing restricting `x` and `y` to be the same type, so OCaml tells us that `x` will be of type `'a`, and `y` will be of type `'b`, where `'a` and `'b` may or may not be the same.
-  
-2. Similarly, we get the same result when defining `f` as a function that takes two variables, as the compiler again cannot assume that `x` and `y` are of the same type:
+1. Similarly, we get the same result when defining `f` as a function that takes two variables, as the compiler again cannot assume that `x` and `y` are of the same type:
 
   ```ocaml
   let f x y = x;;
@@ -91,6 +70,17 @@ As stated in the introduction, there are two ways of looking at this:
   ```
 
   By comparing `x` and `y`, we are telling OCaml that they are of the same type, which means that the `'b`s turn into `'a`s.
+
+2. `f` takes one argument and returns a function as an output. In this case, `f` will look like this: `let f x = ...`. In `...` we have to return a function with the type `'a -> 'a`. Well, we know from example 1 that we can define a function with the type `'a -> 'a` by writing `let g y = y`. So let's try defining `g` inside `f` and then return `g`!
+
+  ```ocaml
+  let f x =
+    let g y = y in
+    g;;
+  val f : 'a -> 'b -> 'b
+  ```
+
+  But wait, why does does `f` now have the type `'a -> 'b -> 'b`? Shouldn't it be `'a -> 'a -> 'a`? Here's the thing: there's nothing restricting `x` and `y` to be the same type, so OCaml tells us that `x` will be of type `'a`, and `y` will be of type `'b`, where `'a` and `'b` may or may not be the same.
 
 ### 3. `('a -> 'b) -> 'a -> 'b`
 **Can we define a function `f` whose type is `('a -> 'b) -> 'a -> 'b`?**
