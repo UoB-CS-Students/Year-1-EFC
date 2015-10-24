@@ -57,7 +57,7 @@ As stated in the introduction, there are two ways of looking at this:
   val f : 'a -> 'b -> 'b
   ```
 
-  But wait, why does does `f` now have the type `'a -> 'b -> 'b`? Shouldn't it be `'a -> 'a -> 'a`? Here's the thing: there's nothing restricting `x` and `y` to be the same type, so OCaml tells us that `x` will be of type `a`, and `y` will be of type `b`, where `a` and `b` may or may not be the same. So in order to get the form we want, we have to imply that `x` and `y` have the same type. We could do this by comparing them:
+  But wait, why does does `f` now have the type `'a -> 'b -> 'b`? Shouldn't it be `'a -> 'a -> 'a`? Here's the thing: there's nothing restricting `x` and `y` to be the same type, so OCaml tells us that `x` will be of type `'a`, and `y` will be of type `'b`, where `'a` and `'b` may or may not be the same. So in order to get the form we want, we have to imply that `x` and `y` have the same type. We could do this by comparing them:
 
   ```ocaml
   let f x =
