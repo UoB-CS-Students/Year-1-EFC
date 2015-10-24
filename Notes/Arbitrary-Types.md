@@ -48,7 +48,7 @@ As stated in the introduction, there are two ways of looking at this:
   val f : 'a -> 'a -> 'a
   ```
 
-2. `f` takes one argument and returns a function as an output. In this case, `f` will look like this: `let f x = ...`. In `...` we have to return a function with the type `'a -> 'a`. Well, we know from example 1 that we can define a function with the type `'a -> 'a` by writing `let g y = y`. So let's try defining `g` inside `f` and then return `g`!
+1. `f` takes one argument and returns a function as an output. In this case, `f` will look like this: `let f x = ...`. In `...` we have to return a function with the type `'a -> 'a`. Well, we know from example 1 that we can define a function with the type `'a -> 'a` by writing `let g y = y`. So let's try defining `g` inside `f` and then return `g`!
 
   ```ocaml
   let f x =
@@ -57,12 +57,34 @@ As stated in the introduction, there are two ways of looking at this:
   val f : 'a -> 'b -> 'b
   ```
 
-  But wait, why does does `f` now have the type `'a -> 'b -> 'b`? Shouldn't it be `'a -> 'a -> 'a`? Here's the thing: there's nothing restricting `x` and `y` to be the same type, so OCaml tells us that `x` will be of type `'a`, and `y` will be of type `'b`, where `'a` and `'b` may or may not be the same. So in order to get the form we want, we have to imply that `x` and `y` have the same type. We could do this by comparing them:
+  But wait, why does does `f` now have the type `'a -> 'b -> 'b`? Shouldn't it be `'a -> 'a -> 'a`? Here's the thing: there's nothing restricting `x` and `y` to be the same type, so OCaml tells us that `x` will be of type `'a`, and `y` will be of type `'b`, where `'a` and `'b` may or may not be the same.
+  
+2. Similarly, we get the same result when defining `f` as a function that takes two variables, as the compiler again cannot assume that `x` and `y` are of the same type:
+
+  ```ocaml
+  let f x y = x;;
+  val f : 'a -> 'b -> 'a
+
+  let f x y = y;;
+  val f : 'a -> 'b -> 'b
+  ```
+  
+  So in order to get the form we want, we have to imply that `x` and `y` have the same type. We can do this in several ways. The most direct is simply to explicitly specify that the types of `x` and `y` are the same:
+  
+  ```ocaml
+  let f (x:'a) (y:'a) = x;;
+  val f : 'a -> 'a -> 'a
+  
+  let g (x:'a) (y:'a) = y;;
+  val g : 'a -> 'a -> 'a
+  ```
+  
+  We can also do this in more subtle ways, such as by comparing the variables:
 
   ```ocaml
   let f x =
     let g y =
-      let unused_variable = (x = y) in
+      let _ = (x = y) in
       y
     in g;;
   val f : 'a -> 'a -> 'a
@@ -72,7 +94,7 @@ As stated in the introduction, there are two ways of looking at this:
 
 ### 3. `('a -> 'b) -> 'a -> 'b`
 **Can we define a function `f` whose type is `('a -> 'b) -> 'a -> 'b`?**
-The first argument of `f` has the type `'a -> 'b`, which is a function. The second argument of `f` has the type `'a`, and the output has type `'b`. An concrete example would be where the first argument is a function `int -> bool`, and it returns whether or not an integer is even, and then the second argument is the integer we want to inspect. For example, `f is_even 5` would be false.
+The first argument of `f` has the type `'a -> 'b`, which is a function. The second argument of `f` has the type `'a`, and the output has type `'b`. A concrete example would be where the first argument is a function `int -> bool`, and it returns whether or not an integer is even, and then the second argument is the integer we want to inspect. For example, `f is_even 5` would be false.
 
 Remember that `f` takes two arguments - a function and something else:
 
@@ -86,7 +108,7 @@ So why does this work? Well, OCaml knows that we are taking two inputs and retur
 ### 4. 'a -> ('a -> 'a) -> 'a
 ```ocaml
 let f x g =
-  let dummy = g x = x in
+  let _ = g x = x in
   x;;
 ```
 
