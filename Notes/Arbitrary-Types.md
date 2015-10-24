@@ -36,6 +36,7 @@ val f : 'a -> 'a
 
 ### 2. `'a -> 'a -> 'a`
 **Can we define a function `f` whose type is `'a -> 'a -> 'a`?**
+
 As stated in the introduction, there are two ways of looking at this:
 
 1. Similarly, we get the same result when defining `f` as a function that takes two variables, as the compiler again cannot assume that `x` and `y` are of the same type:
